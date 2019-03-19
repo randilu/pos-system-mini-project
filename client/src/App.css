@@ -1,0 +1,46 @@
+.remove-btn {
+    margin-right: 0.5rem;
+    float: bottom;
+}
+
+.order-items{
+    margin: 0.5rem;
+    float: bottom;
+}
+
+.fade-enter{
+    
+}
+
+.fade-enter-active{
+
+}
+
+.fade-exit{
+
+}
+
+.fade-exit-active{
+
+}
+
+.inventory-list{
+
+}
+
+.item-name{
+     float: top;
+}
+
+.item-price-lab{
+    float: right;
+}
+
+.col-item{
+    margin: 0.5rem;
+}
+
+.row-item{
+    margin-top: 1.5rem;
+    float: bottom;
+}
