@@ -11,7 +11,7 @@ const IItem = new Schema({
 
 // Create Schema
 
-const orderSchema = new Schema({
+const OrderSchema = new Schema({
         user_id: {
             type: String,
             required: true
@@ -25,4 +25,4 @@ const orderSchema = new Schema({
         timestamps: true
     });
 
-module.exports = Order = mongoose.model('order', orderSchema);
+module.exports = Order = mongoose.model('order', OrderSchema);

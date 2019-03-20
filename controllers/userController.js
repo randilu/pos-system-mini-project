@@ -1,7 +1,8 @@
-const User = require('../models/User');
 const express = require('express');
 const router = express.Router();
 const userService = require('../services/userService');
+const jwt = require('jsonwebtoken');
+const config = require('config');
 
 // Routes
 
@@ -20,6 +21,9 @@ router.delete('/:id', deleteUser);
 // PUT request to update User.
 router.put('/:id', updateUser);
 
+// POST request to register User.
+router.post('/auth', authenticateUser);
+
 module.exports = router;
 
 /**
@@ -36,6 +40,7 @@ function getAllUsers(req, res) {
             });
         });
 }
+
 /**
  *
  * Display a specific user by id.
@@ -57,20 +62,23 @@ function getUserById(req, res) {
             });
         });
 }
-/**
+
+/*
+
+/!**
  *
  * Handle user create on POST.
  *
- */
+ *!/
 function createUser(req, res) {
     // Validate request
-    if (!req.body.username || !req.body.password) {
+    if (!req.body.email || !req.body.password) {
         return res.status(400).send({
             message: "Username or Password can not be empty"
         });
     }
 
-    userService.createUser(req.body.username, req.body.password, req.body.scope)
+    userService.createUser(req.body.email, req.body.password, req.body.role)
         .then(user => user ? res.json(user) : res.status(404).send({
             message: "User not found with id " + req.params.id
         }))
@@ -80,6 +88,8 @@ function createUser(req, res) {
             });
         });
 }
+*/
+
 /**
  *
  * Display user delete form on GET.
@@ -96,6 +106,7 @@ function deleteUser(req, res) {
             });
         });
 }
+
 /**
  *
  *  Handle user update on PUT.
@@ -103,17 +114,12 @@ function deleteUser(req, res) {
  */
 function updateUser(req, res) {
     // Validate Request
-    if (!req.body.username || !req.body.password) {
+    if (!req.body.email || !req.body.password || !req.body.name) {
         return res.status(400).send({
-            message: "Username or Password can not be empty"
+            message: "Fields name, email or password can not be empty"
         });
     }
-    userService.updateUser(req.params.id, req.body.username, req.body.password);
-    // Find user and update it with the request body
-    User.findByIdAndUpdate(req.params.id, {
-        username: req.body.username,
-        password: req.body.password
-    }, {new: true})
+    userService.updateUser(req.params.id, req.params.name, req.body.email, req.body.password)
         .then(user => user ? res.json(user) : res.status(404).send({
             message: "User not found with id " + req.params.id
         })).catch(err => {
@@ -123,6 +129,88 @@ function updateUser(req, res) {
     });
 }
 
+/**
+ *
+ * Handle user create on POST.
+ *
+ */
+function createUser(req, res) {
+    // Validate request
+    if (!req.body.email || !req.body.password || !req.body.name) {
+        return res.status(400).send({
+            message: "Fields name, email or Password can not be empty"
+        });
+    }
+
+    userService.createUser(req.body.name, req.body.email, req.body.password, req.body.role)
+        .then(user => user ?
+            jwt.sign(
+                {id: user.id},
+                config.get('jwtSecret'),
+                {expiresIn: 3600},
+                (err, token) => {
+                    if (err) throw err;
+                    res.json({
+                            token,
+                            user: {
+                                id: user.id,
+                                name: user.name,
+                                email: user.email,
+                                password: user.password
+                            }
+                        }
+                    )
+                }
+            ) : res.status(400).send({
+                message: "User already exists "
+            }))
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Error occurred while creating the User."
+            });
+        });
+}
+
+/**
+ *
+ * Handle user create on POST.
+ *
+ */
+function authenticateUser(req, res) {
+    // Validate request
+    if (!req.body.email || !req.body.password) {
+        return res.status(400).send({
+            message: "Fields email or password can not be empty"
+        });
+    }
+
+    userService.authenticateUser(res, req.body.name, req.body.email, req.body.password, req.body.role)
+        /*.then(user => user ?
+            jwt.sign(
+                {id: user.id},
+                config.get('jwtSecret'),
+                {expiresIn: 3600},
+                (err, token) => {
+                    if (err) throw err;
+                    res.json({
+                            token,
+                            user: {
+                                id: user.id,
+                                name: user.name,
+                                email: user.email,
+                            }
+                        }
+                    )
+                }
+            ) : res.status(400).send({
+                message: "User doesn't exist "
+            }))*/
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Error occurred while creating the User."
+            });
+        });
+}
 
 
 

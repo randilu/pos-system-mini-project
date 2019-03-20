@@ -362,7 +362,7 @@ paths:
       - "application/xml"
       - "application/json"
       parameters:
-      - name: "username"
+      - name: "email"
         in: "query"
         description: "The user name for login"
         required: true
@@ -387,7 +387,7 @@ paths:
               format: "date-time"
               description: "date in UTC when token expires"
         400:
-          description: "Invalid username/password supplied"
+          description: "Invalid email/password supplied"
   /user/logout:
     get:
       tags:
@@ -406,14 +406,14 @@ paths:
     get:
       tags:
       - "User"
-      summary: "Get user by user username"
+      summary: "Get user by user email"
       description: ""
       operationId: "getUserByName"
       produces:
       - "application/xml"
       - "application/json"
       parameters:
-      - name: "username"
+      - name: "email"
         in: "path"
         description: "The name that needs to be fetched. "
         required: true
@@ -424,7 +424,7 @@ paths:
           schema:
             $ref: "#/definitions/User"
         400:
-          description: "Invalid username supplied"
+          description: "Invalid email supplied"
         404:
           description: "User not found"
     put:
@@ -437,7 +437,7 @@ paths:
       - "application/xml"
       - "application/json"
       parameters:
-      - name: "username"
+      - name: "email"
         in: "path"
         description: "name that need to be updated"
         required: true
@@ -463,14 +463,14 @@ paths:
       - "application/xml"
       - "application/json"
       parameters:
-      - name: "username"
+      - name: "email"
         in: "path"
         description: "The name that needs to be deleted"
         required: true
         type: "string"
       responses:
         400:
-          description: "Invalid username supplied"
+          description: "Invalid email supplied"
         404:
           description: "User not found"
 definitions:
