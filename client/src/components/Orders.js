@@ -61,7 +61,7 @@ class Orders extends Component {
             <Container style={{marginTop: "5rem"}} >
                 <Label>Current Orders</Label>
                 <ListGroup className="order-list">
-                        {orders.map(({_id, order_no, customer_id, items}) => (
+                        {orders.map(({_id, user_id, items}) => (
                             <ListGroupItem key={_id} >
                                 <Button
                                     className="remove-btn"
@@ -77,10 +77,10 @@ class Orders extends Component {
                                         <Col xs="6" sm="4">Qty</Col>
                                         <Col sm="4">Cost</Col>
                                     </Row>
-                                    {items.map(({_id, quantity, item}) => (
+                                    {items.map(({_id, item, quantity}) => (
                                         <ListGroupItem  key={_id} >
                                             <Row >
-                                                <Col xs="6" sm="4" >{item.name}</Col>
+                                                <Col xs="6" sm="4" >{item.item_name}</Col>
                                                 <Col xs="6" sm="4">{quantity}</Col>
                                                 <Col sm="4" >${item.price*quantity}</Col>
                                             </Row>

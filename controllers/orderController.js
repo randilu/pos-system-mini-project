@@ -21,7 +21,7 @@ router.delete('/:id', deleteOrder);
 router.put('/:id', updateOrder);
 
 // GET request for one orders of a user.
-router.get('user/:id', getOrderByUserId);
+router.get('/user/:id', getOrderByUserId);
 
 module.exports = router;
 
@@ -46,7 +46,7 @@ function getAllOrders(req, res) {
 function getOrderByUserId(req, res) {
     orderService.getOrderByUserId(req.params.id)
         .then(orders => orders ? res.json(orders) : res.status(404).send({
-            message: "Order not found with id " + req.params.id
+            message: "User not found with id " + req.params.id
         }))
         .catch(err => {
             res.status(500).send({
@@ -145,7 +145,4 @@ function updateOrder(req, res) {
             });
         });
 }
-
-
-
 

@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const Item = require('../models/Item');
+const OrderItem = require('../models/OrderItem');
 
 
-const IItem = new Schema({
+
+/*const IItem = new Schema({
     item: Item.schema,
     quantity: {type:Number, default: 1}
 
@@ -18,6 +19,22 @@ const OrderSchema = new Schema({
         },
         items: {
             type: [IItem],
+            required: true
+        }
+    },
+    {
+        timestamps: true
+    });*/
+
+
+
+const OrderSchema = new Schema({
+        user_id: {
+            type: String,
+            required: true
+        },
+        items: {
+            type: [OrderItem.schema],
             required: true
         }
     },
