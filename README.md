@@ -3,8 +3,9 @@
 credentials of a prevailing test user,
 
 ``
-email = testuser@test.com
+email = testuser@test.com  
 ``
+      
 ``
 password = password
 ``
