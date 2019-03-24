@@ -10,8 +10,6 @@ import {
     Input
 } from "reactstrap";
 
-import {connect} from "react-redux";
-import {addItem} from "../actions/itemActions";
 
 class ItemModal extends Component {
     state = {
@@ -52,7 +50,7 @@ class ItemModal extends Component {
         return (
             <div>
                 <Button
-                    color="dark"
+                    color="info"
                     style={{marginBottom: "2rem"}}
                     onClick={this.toggle}
                 >
@@ -60,7 +58,7 @@ class ItemModal extends Component {
                 </Button>
 
                 <Modal isOpen={this.state.modal} toggle={this.toggle}>
-                    <ModalHeader toggle={this.toggle}>Add To Shopping List</ModalHeader>
+                    <ModalHeader toggle={this.toggle}></ModalHeader>
                     <ModalBody>
                         <Form onSubmit={this.onSubmit}>
                             <FormGroup>
@@ -96,8 +94,5 @@ class ItemModal extends Component {
     }
 }
 
-const mapStateToProps = state => ({item: state.item});
 
-
-export default connect(mapStateToProps,
-    {addItem})(ItemModal);
+export default ItemModal;

@@ -107,7 +107,7 @@ async function authenticateUser(res, name, email, password) {
         bcrypt.compare(password, user.password)
             .then(isMatch => {
                 if (!isMatch) {
-                    return res.status(400).send({
+                    return res.status(401).json({
                         message: "Invalid credentials"
                     })
                 }
@@ -128,7 +128,7 @@ async function authenticateUser(res, name, email, password) {
                         )
                     }
                 )
-            })
+            }).catch(err => res.status(500).send(err || {message: "Error occurred while authenticating user"}));
     } else {
         return res.status(400).send({message: "User does not exist"})
     }

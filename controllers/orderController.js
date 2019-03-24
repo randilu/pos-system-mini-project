@@ -20,6 +20,9 @@ router.delete('/:id', deleteOrder);
 // PUT request to update Order.
 router.put('/:id', updateOrder);
 
+// PUT request to add item to an Order.
+router.put('/:id/items', addItem);
+
 // GET request for one orders of a user.
 router.get('/user/:id', getOrderByUserId);
 
@@ -123,14 +126,14 @@ function deleteOrder(req, res) {
  */
 function updateOrder(req, res) {
     // Validate Request
-    if (!req.body.user_id) {
+    if (!req.body.items) {
         return res.status(400).send({
-            message: "User ID of order creator can not be empty"
+            message: "Items can not be empty"
         });
     }
 
     // Find order and update it with the request body
-    orderService.updateOrder(req.params.id, req.body.user_id, req.body.items)
+    orderService.updateOrder(req.params.id, req.body.items)
         .then(order => order ? res.json(order) : res.status(404).send({
             message: "Order not found with id " + req.params.id
         }))
@@ -145,4 +148,35 @@ function updateOrder(req, res) {
             });
         });
 }
+
+
+/**
+ *  Handle add item to an existing order.
+ *
+ */
+function addItem(req, res) {
+    // Validate Request
+    if (!req.body.item_id) {
+        return res.status(400).send({
+            message: "Item can not be empty"
+        });
+    }
+
+    // Find order and update it with the request body
+    orderService.addItemToOrder(req.params.id, req.body.item_id, req.body.quantity)
+        .then(order => order ? res.json(order) : res.status(404).send({
+            message: "Order not found with id " + req.params.id
+        }))
+        .catch(err => {
+            if (err.kind === 'ObjectId') {
+                return res.status(404).send({
+                    message: "Order not found with id " + req.params.id
+                });
+            }
+            return res.status(500).send({
+                message: "Error updating order with id " + req.params.id
+            });
+        });
+}
+
 

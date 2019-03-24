@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
     Collapse,
     Navbar,
@@ -28,11 +28,11 @@ class AppNavbar extends Component {
                 <Navbar color='dark' dark expand='sm' className='mb-5'>
                     <Container>
                         <NavbarBrand href='/'>Cake POS</NavbarBrand>
-                        <NavbarToggler onClick={this.toggle} />
+                        <NavbarToggler onClick={this.toggle}/>
                         <Collapse isOpen={this.state.isOpen} navbar>
                             <Nav className='ml-auto' navbar>
                                 <NavItem>
-                                    <NavLink href='#'>User</NavLink>
+                                    <NavLink href='#'>{this.props.userName}</NavLink>
                                 </NavItem>
                             </Nav>
                         </Collapse>

@@ -1,0 +1,4 @@
+{
+  "mongoURI": "mongodb+srv://admin:admin123@cluster-bootcamp-kzpmj.mongodb.net/shoppingList_db?retryWrites=true",
+  "jwtSecret": "pos_jwt_secret"
+}

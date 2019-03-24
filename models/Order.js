@@ -2,32 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const OrderItem = require('../models/OrderItem');
 
-
-
-/*const IItem = new Schema({
-    item: Item.schema,
-    quantity: {type:Number, default: 1}
-
-});
-
-// Create Schema
-
-const OrderSchema = new Schema({
-        user_id: {
-            type: String,
-            required: true
-        },
-        items: {
-            type: [IItem],
-            required: true
-        }
-    },
-    {
-        timestamps: true
-    });*/
-
-
-
+// TODO add order status
 const OrderSchema = new Schema({
         user_id: {
             type: String,

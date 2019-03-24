@@ -12,7 +12,8 @@ module.exports = {
     createOrder,
     deleteOrder,
     updateOrder,
-    getOrderByUserId
+    getOrderByUserId,
+    addItemToOrder
 };
 
 /**
@@ -57,6 +58,7 @@ async function createOrder(userId, items) {
 
     return order.save();
 }
+
 // function createOrder(userId, items) {
 //     const order_count_promise = Order.countDocuments({});
 //     order_count_promise.then(count => {
@@ -104,7 +106,6 @@ function getOrderByUserId(user_id) {
     return Order.find().where('user_id', user_id);
 }
 
-
 /**
  * Updates an existing order in the store
  *
@@ -113,9 +114,69 @@ function getOrderByUserId(user_id) {
  * body Order Order object to update
  * no return value expected for this operation
  **/
-function updateOrder(orderId, userId, items) {
+async function updateOrder(orderId, items) {
+    let modified_items = [];
+
+    for (let i = 0; i < items.length; i++) {
+        let order_item = items[i];
+        const item = await Item.findById(order_item.item.item_id);
+        const modified_order_item = new OrderItem({
+                item: {
+                    item_id: item.id,
+                    item_name: item.name,
+                    price: item.price
+                },
+                quantity: order_item.quantity
+            }
+        );
+        modified_items.push(modified_order_item);
+    }
     return (Order.findByIdAndUpdate(orderId, {
-        user_id: userId,
+        items: modified_items
+    }, {new: true}));
+}
+
+/**
+ * Adds a new item to an existing order
+ *
+ * @param orderId, String ID of order that needs to be updated
+ * @param itemId, String ID of the item to be added
+ * @param quantity, added quantity
+ * @returns {Promise<Query>}
+ */
+async function addItemToOrder(orderId, itemId, quantity) {
+
+
+    const order = await Order.findById(orderId)
+    const items = order.items;
+
+    // for (let i = 0; i < items.length; i++) {
+    //     let order_item = items[i];
+    //     if(order_item.item.item_id === itemId){
+    //         ++order_item.quantity;
+    //         items.push(order_item);
+    //         return (Order.findByIdAndUpdate(orderId, {
+    //             items: items
+    //         }, {new: true}));
+    //     }
+    // }
+
+    const item = await Item.findById(itemId);
+
+
+    const new_order_item = new OrderItem({
+            item: {
+                item_id: item.id,
+                item_name: item.name,
+                price: item.price
+            },
+            quantity: quantity
+        }
+    );
+
+    items.push(new_order_item);
+
+    return (Order.findByIdAndUpdate(orderId, {
         items: items
     }, {new: true}));
 }

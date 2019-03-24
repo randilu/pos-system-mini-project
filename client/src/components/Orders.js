@@ -1,26 +1,39 @@
 import React, {Component} from "react";
-import {Container, Button, ListGroup, ListGroupItem, Row, Col} from "reactstrap";
-import {connect} from "react-redux";
-import {getOrders, deleteOrder, addOrder} from "../actions/orderActions";
-import PropTypes from "prop-types";
+import {
+    Container,
+    ListGroup,
+} from "reactstrap";
 import Label from "reactstrap/es/Label";
+import {GET_ORDERS_BY_USER_ID} from "../services/services";
+import Order from "./Order";
 
 class Orders extends Component {
-    // life cycle method which runs when the component mount
-   
+    constructor(props) {
+        super(props);
+        this.state = {
+            orders: [],
+            userId: "",
 
+        };
+    }
+
+    // life cycle method which runs when the component mount
     componentDidMount() {
-        this.props.getOrders();
+        const userId = this.props.userId;
+        GET_ORDERS_BY_USER_ID(userId).then(res => {
+            const orders = res.data;
+            this.setState({orders});
+        });
     }
 
     onDeleteClick = id => {
         this.props.deleteOrder(id);
     };
 
-    calcGrandTotal=  items => {
+    calcGrandTotal = items => {
         console.log(items);
         // let sum =0;
-        
+
         // let sum =items.map((quantity, item) => item.price*quantity);
         // let arr = JSON.parse(items);
         //  let i =arr[1].quantity;
@@ -33,18 +46,17 @@ class Orders extends Component {
         //     sum+=i.item.price*i.quantity;
         // return sum;
     };
-    
-    calcGrandTotal=  items => {
 
+    calcGrandTotal = items => {
         // let sum =0;
-        
+
         // let sum =items.map((quantity, item) => item.price*quantity);
         // let arr = JSON.parse(items);
         //  let i =arr[1].quantity;
         //  console.log(i);
         console.log(items);
-        let sum=0;
-        for (let object in items){
+        let sum = 0;
+        for (let object in items) {
             console.log(object[0].quantity);
             // let obj = object[0];
             // console.log(obj.quantity);
@@ -53,63 +65,20 @@ class Orders extends Component {
         }
         return sum;
     };
-    
 
     render() {
-        const {orders} = this.props.order;
+        const orders = this.state.orders;
         return (
-            <Container style={{marginTop: "5rem"}} >
+            <Container style={{marginTop: "2rem"}}>
                 <Label>Current Orders</Label>
                 <ListGroup className="order-list">
-                        {orders.map(({_id, user_id, items}) => (
-                            <ListGroupItem key={_id} >
-                                <Button
-                                    className="remove-btn"
-                                    color="danger"
-                                    size="md"
-                                    onClick={this.onDeleteClick.bind(this, _id)}
-                                >
-                                    Remove Order
-                                </Button>
-                                <ListGroup className="order-items" style={{textAlign: "center"}}>
-                                    <Row>
-                                        <Col xs="6" sm="4">Item</Col>
-                                        <Col xs="6" sm="4">Qty</Col>
-                                        <Col sm="4">Cost</Col>
-                                    </Row>
-                                    {items.map(({_id, item, quantity}) => (
-                                        <ListGroupItem  key={_id} >
-                                            <Row >
-                                                <Col xs="6" sm="4" >{item.item_name}</Col>
-                                                <Col xs="6" sm="4">{quantity}</Col>
-                                                <Col sm="4" >${item.price*quantity}</Col>
-                                            </Row>
-
-                                        </ListGroupItem>
-                                        
-                                    ))}
-                                    <Row className = "row-item" style={{textAlign: "center"}}>
-                                        <Col xs="6" sm="4">Grand Total</Col>
-                                        <Col sm="4">{this.calcGrandTotal(items)}</Col>
-                                    </Row>
-                                </ListGroup>
-                            </ListGroupItem>
-
-                        ))}
+                    {orders.map(({_id, user_id, items}) => (
+                        <Order key={_id} orderId={_id} userId={user_id} items={items}/>
+                    ))}
                 </ListGroup>
             </Container>
         );
     }
 }
 
-Orders.propTypes = {
-    getOrders: PropTypes.func.isRequired, //action from redux stored as a prop
-    order: PropTypes.object.isRequired
-};
-
-const mapStateToProps = state => ({order: state.order});
-
-export default connect(
-    mapStateToProps,
-    {getOrders, deleteOrder, addOrder}
-)(Orders);
+export default Orders;

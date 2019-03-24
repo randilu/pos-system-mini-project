@@ -2,8 +2,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = require('./routes/router');
 const config = require('config');
+const cors = require('cors');
 
 const app = express();
+
+//Cors
+app.use(cors());
 
 //Body parser middleware
 app.use(express.json());

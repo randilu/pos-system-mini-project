@@ -1,23 +1,35 @@
 import React, {Component} from "react";
 import {Container, Button, ListGroup, ListGroupItem} from "reactstrap";
 import {CSSTransition, TransitionGroup} from "react-transition-group";
-import {connect} from "react-redux";
-import {getItems, deleteItem} from "../actions/itemActions";
-import PropTypes from "prop-types";
 import Label from "reactstrap/es/Label";
+import {GET_ITEMS, DELETE_ITEM} from "../services/services";
 
 class InventoryItems extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            items: [],
+            item_id: ""
+        };
+    }
+
     // life cycle method which runs when the component mount
     componentDidMount() {
-        this.props.getItems();
+        GET_ITEMS().then(res => {
+            const items = res.data;
+            this.setState({items});
+        });
     }
 
     onDeleteClick = id => {
-        this.props.deleteItem(id);
+        DELETE_ITEM(id).then(res => {
+            const items = this.state.items.filter(item => item._id !== id);
+            this.setState({items});
+        });
     };
 
     render() {
-        const {items} = this.props.item;
+        const items = this.state.items;
         return (
             <Container>
                 <ListGroup>
@@ -33,8 +45,8 @@ class InventoryItems extends Component {
                                     >
                                         Delete
                                     </Button>
-                                        <Label>{name}</Label>
-                                        <Label className="item-price-lab">{price}</Label>
+                                    <Label>{name}</Label>
+                                    <Label className="item-price-lab">${price}</Label>
                                 </ListGroupItem>
                             </CSSTransition>
                         ))}
@@ -45,14 +57,4 @@ class InventoryItems extends Component {
     }
 }
 
-InventoryItems.propTypes = {
-    getItems: PropTypes.func.isRequired, //action from redux stored as a prop
-    item: PropTypes.object.isRequired
-};
-
-const mapStateToProps = state => ({item: state.item});
-
-export default connect(
-    mapStateToProps,
-    {getItems, deleteItem}
-)(InventoryItems);
+export default InventoryItems;
