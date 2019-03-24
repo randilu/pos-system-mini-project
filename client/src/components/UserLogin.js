@@ -1,6 +1,8 @@
 import React, {Component} from "react";
 import {InputGroup, Input, InputGroupAddon, Button, Label} from "reactstrap";
 import {AUTHENTICATE_USER} from "../services/services";
+import UserRegister from "./UserRegister";
+import { ListGroupItem } from "react-bootstrap";
 
 class UserLogin extends Component {
     state = {
@@ -8,7 +10,8 @@ class UserLogin extends Component {
         password: "",
         userId: "",
         userName: "",
-        isLoggedIn: false
+        isLoggedIn: false,
+        path:""
     };
 
     handleChange = event => {
@@ -41,11 +44,22 @@ class UserLogin extends Component {
         });
     };
 
+    handleSignUp = (event) => {
+        event.preventDefault();
+        this.setState({path: "signUp"});
+    }
+
     render() {
+        if(this.state.path==="signUp"){
+            return(
+                <UserRegister/>
+            )
+        }
         return (
             <div>
+                <ListGroupItem>
                 <Label>
-                    <h1>Login to Your Account</h1>
+                    <h2>Login to Your Account Here!</h2>
                 </Label>
                 <br/>
                 <br/>
@@ -76,6 +90,10 @@ class UserLogin extends Component {
                 <Button color="info" onClick={this.handleSubmit}>
                     Login
                 </Button>
+                <Button color="info" onClick={this.handleSignUp}>
+                    Sign Up
+                </Button>
+                </ListGroupItem>
             </div>
         );
     }

@@ -72,8 +72,8 @@ class Orders extends Component {
             <Container style={{marginTop: "2rem"}}>
                 <Label>Current Orders</Label>
                 <ListGroup className="order-list">
-                    {orders.map(({_id, user_id, items}) => (
-                        <Order key={_id} orderId={_id} userId={user_id} items={items}/>
+                    {orders.map(({_id, user_id, items, status}) => (
+                        <Order key={_id} orderId={_id} userId={user_id} items={items} orderStatus={status}/>
                     ))}
                 </ListGroup>
             </Container>

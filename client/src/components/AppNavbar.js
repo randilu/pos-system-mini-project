@@ -32,7 +32,7 @@ class AppNavbar extends Component {
                         <Collapse isOpen={this.state.isOpen} navbar>
                             <Nav className='ml-auto' navbar>
                                 <NavItem>
-                                    <NavLink href='#'>{this.props.userName}</NavLink>
+                                    <NavLink href='#'><b>Hi! {this.props.userName}</b></NavLink>
                                 </NavItem>
                             </Nav>
                         </Collapse>

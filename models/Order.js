@@ -11,6 +11,10 @@ const OrderSchema = new Schema({
         items: {
             type: [OrderItem.schema],
             required: true
+        },
+        status: {
+            type: String,
+            default: 'Pending'
         }
     },
     {

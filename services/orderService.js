@@ -59,19 +59,6 @@ async function createOrder(userId, items) {
     return order.save();
 }
 
-// function createOrder(userId, items) {
-//     const order_count_promise = Order.countDocuments({});
-//     order_count_promise.then(count => {
-//         const order = new Order({
-//             order_no: ++count,
-//             user_id: userId,
-//             items: items
-//         });
-//         order.save();
-//         Order.count++;
-//     });
-// }
-
 /**
  * Deletes an order from store
  *
@@ -150,16 +137,16 @@ async function addItemToOrder(orderId, itemId, quantity) {
     const order = await Order.findById(orderId)
     const items = order.items;
 
-    // for (let i = 0; i < items.length; i++) {
-    //     let order_item = items[i];
-    //     if(order_item.item.item_id === itemId){
-    //         ++order_item.quantity;
-    //         items.push(order_item);
-    //         return (Order.findByIdAndUpdate(orderId, {
-    //             items: items
-    //         }, {new: true}));
-    //     }
-    // }
+    for (let i = 0; i < items.length; i++) {
+        let order_item = items[i];
+        if (order_item.item.item_id === itemId) {
+            ++order_item.quantity;
+            items[i] = order_item;
+            return (Order.findByIdAndUpdate(orderId, {
+                items: items
+            }, {new: true}));
+        }
+    }
 
     const item = await Item.findById(itemId);
 

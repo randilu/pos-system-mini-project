@@ -2,7 +2,6 @@ import React, {Component} from "react";
 import {Dropdown} from "react-bootstrap";
 import {
     GET_ITEMS,
-    UPDATE_ORDER,
     ADD_ITEM_TO_ORDER
 } from "../services/services";
 
@@ -25,18 +24,6 @@ class SelectItemDropdown extends Component {
         });
     }
 
-    onDeleteClick = id => {
-        this.props.deleteOrder(id);
-    };
-
-    onAddItemClick = id => {
-        UPDATE_ORDER();
-        // UPDATE_ORDER(id, order).then(res => {
-        //     const order_items = res.data;
-        //     this.setState({orders});
-        //  })
-    };
-
     handleOnSelect = itemId => {
         ADD_ITEM_TO_ORDER(this.props.orderId, {item_id: itemId})
             .then(res => this.props.getOrderStatus(res.data.items));
@@ -44,25 +31,7 @@ class SelectItemDropdown extends Component {
         console.log(this.props.orderId);
         console.log({itemId});
     };
-    onChange = event => {
-        this.setState({});
-    };
-
-    onSubmit = event => {
-        event.preventDefault();
-
-        const newItem = {
-            name: this.state.name,
-            price: this.state.price
-        };
-
-        // Add item via addItem action
-        this.props.addItem(newItem);
-
-        // Close Modal
-        this.toggle();
-    };
-
+    
     render() {
         const items = this.state.items;
         return (
