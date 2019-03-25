@@ -36,21 +36,22 @@ function getAllOrders() {
 async function createOrder(userId, items) {
     let modified_items = [];
 
-    for (let i = 0; i < items.length; i++) {
-        let order_item = items[i];
-        const item = await Item.findById(order_item.item_id);
-        const modified_order_item = new OrderItem({
-                item: {
-                    item_id: item.id,
-                    item_name: item.name,
-                    price: item.price
-                },
-                quantity: order_item.quantity
-            }
-        );
-        modified_items.push(modified_order_item);
+    if(items) {
+        for (let i = 0; i < items.length; i++) {
+            let order_item = items[i];
+            const item = await Item.findById(order_item.item_id);
+            const modified_order_item = new OrderItem({
+                    item: {
+                        item_id: item.id,
+                        item_name: item.name,
+                        price: item.price
+                    },
+                    quantity: order_item.quantity
+                }
+            );
+            modified_items.push(modified_order_item);
+        }
     }
-
     const order = new Order({
         user_id: userId,
         items: modified_items
@@ -101,7 +102,7 @@ function getOrderByUserId(user_id) {
  * body Order Order object to update
  * no return value expected for this operation
  **/
-async function updateOrder(orderId, items) {
+async function updateOrder(orderId, items, status) {
     let modified_items = [];
 
     for (let i = 0; i < items.length; i++) {
@@ -119,6 +120,7 @@ async function updateOrder(orderId, items) {
         modified_items.push(modified_order_item);
     }
     return (Order.findByIdAndUpdate(orderId, {
+        status: status,
         items: modified_items
     }, {new: true}));
 }
@@ -134,7 +136,7 @@ async function updateOrder(orderId, items) {
 async function addItemToOrder(orderId, itemId, quantity) {
 
 
-    const order = await Order.findById(orderId)
+    const order = await Order.findById(orderId);
     const items = order.items;
 
     for (let i = 0; i < items.length; i++) {

@@ -133,7 +133,7 @@ function updateOrder(req, res) {
     }
 
     // Find order and update it with the request body
-    orderService.updateOrder(req.params.id, req.body.items)
+    orderService.updateOrder(req.params.id, req.body.items, req.body.status)
         .then(order => order ? res.json(order) : res.status(404).send({
             message: "Order not found with id " + req.params.id
         }))

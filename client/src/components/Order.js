@@ -7,7 +7,7 @@ import {
   Col,
   Table,
   Label,
-  Collapse,
+  Collapse
 } from "reactstrap";
 import SelectItemDropdown from "./SelectItemDropdown";
 import { UPDATE_ORDER } from "../services/services";
@@ -17,14 +17,17 @@ class Order extends Component {
     super(props);
     this.state = {
       items: [],
-      collapse: false
+      collapse: false,
+      orderStatus: ""
     };
     this.toggle = this.toggle.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
+    console.log("did mount");
     const items = this.props.items;
-    this.setState({ items });
+    const orderStatus = this.props.orderStatus;
+    this.setState({ items: items, orderStatus: orderStatus });
   }
 
   toggle(event) {
@@ -32,8 +35,18 @@ class Order extends Component {
     this.setState(state => ({ collapse: !state.collapse }));
   }
 
-  onDeleteClick = id => {
-    this.props.deleteOrder(id);
+  onServeClick = id => {
+    if (this.state.orderStatus !== "Served") {
+      console.log(id);
+      const items = this.state.items;
+      const orderStatus = "Served";
+      UPDATE_ORDER(id, { status: orderStatus, items: { items } }).then(res => {
+        console.log(res.data);
+        const orderStatus = res.data.status;
+        console.log(orderStatus);
+        this.setState({ orderStatus });
+      });
+    }
   };
 
   getOrderStatus = items => {
@@ -46,6 +59,21 @@ class Order extends Component {
       this.setState({ items })
     );
   };
+
+  onQtyIncrement = id => {
+    const items = this.state.items;
+    const item = items.find(item => item._id === id);
+    if (item) {
+      ++item.quantity;
+    }
+    const modifedItems = items.filter(item => item._id !== id);
+    modifedItems.push(item);
+    UPDATE_ORDER(this.props.orderId, modifedItems, this.state.orderStatus).then(
+      () => this.setState({ items })
+    );
+  };
+
+  onQtyDecrement = id => {};
 
   calcGrandTotal = items => {
     console.log(items);
@@ -65,33 +93,38 @@ class Order extends Component {
   };
 
   render() {
+    console.log("rendered");
     const id = this.props.orderId;
     const userId = this.props.userId;
-    const status = this.props.orderStatus;
     const items = this.state.items;
+    const orderStatus = this.state.orderStatus;
+    const disable =
+      this.state.orderStatus === "Served" ? "disable-element" : "";
     return (
       <Container>
         <ListGroupItem key={id}>
           <Row>
             <Col>
               <Button
-                className="remove-btn"
-                color="danger"
+                className="button"
+                color="success"
                 size="md"
-                onClick={this.onDeleteClick.bind(this, id)}
+                onClick={this.onServeClick.bind(this, id)}
               >
-                Remove Order
+                Serve Order
               </Button>
             </Col>
             <Col>
-              <Button color="primary">{status}</Button>
+              <Button color="primary">{orderStatus}</Button>
             </Col>
             <Col>
-              <SelectItemDropdown
-                userId={userId}
-                orderId={id}
-                getOrderStatus={this.getOrderStatus}
-              />
+              <div className={disable}>
+                <SelectItemDropdown
+                  userId={userId}
+                  orderId={id}
+                  getOrderStatus={this.getOrderStatus}
+                />
+              </div>
             </Col>
             <Col>
               <Button color="info" onClick={this.toggle}>
@@ -135,7 +168,15 @@ class Order extends Component {
                       </td>
                       <td>
                         {" "}
-                        <Label>{quantity}</Label>
+                        <Label>
+                          {quantity}
+                          <Button onClick={this.onQtyIncrement.bind(this, _id)}>
+                            +
+                          </Button>
+                          <Button onClick={this.onQtyDecrement.bind(this, _id)}>
+                            -
+                          </Button>
+                        </Label>
                       </td>
                       <td>
                         <Label>${item.price * quantity}</Label>

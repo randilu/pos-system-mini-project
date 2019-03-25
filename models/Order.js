@@ -9,8 +9,7 @@ const OrderSchema = new Schema({
             required: true
         },
         items: {
-            type: [OrderItem.schema],
-            required: true
+            type: [OrderItem.schema]
         },
         status: {
             type: String,

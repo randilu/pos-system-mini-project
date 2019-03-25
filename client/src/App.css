@@ -30,7 +30,11 @@ label {
 }
 
 button {
-    margin-right: 0.5rem;
+    margin: 0.5rem;
     float: bottom;
 }
 
+.disable-element {
+    pointer-events: none;
+    opacity: 0.4;
+ }
