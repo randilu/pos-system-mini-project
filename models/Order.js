@@ -11,6 +11,10 @@ const OrderSchema = new Schema({
         items: {
             type: [OrderItem.schema]
         },
+        grand_total: {
+            type: Number,
+            default: 0
+        },
         status: {
             type: String,
             default: 'Pending'

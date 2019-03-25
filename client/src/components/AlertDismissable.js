@@ -5,39 +5,39 @@ class AlertDismissible extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { 
-      show: true ,
-    success: false
+    this.state = {
+      show: true,
+      success: false
     };
   }
 
-  componentDidMount(){
+  componentDidMount() {
     const success = this.props.success;
-    this.setState({success});
+    this.setState({ success });
   }
 
   render() {
-    const handleHide = (
-
-    ) => this.setState({ show: false });
+    const handleHide = () => this.setState({ show: false });
     const handleShow = () => this.setState({ show: true });
 
-    if(this.state.success){return (
-      <>
-        <Alert show={this.state.show} variant="success">
-          <Alert.Heading>Registration Success!</Alert.Heading>
-          <p>Please login to continue</p>
-          <hr />
-          <div className="d-flex justify-content-end">
-            <Button onClick={handleHide} variant="outline-success">
-              Close
-            </Button>
-          </div>
-        </Alert>
+    if (this.state.success) {
+      return (
+        <>
+          <Alert show={this.state.show} variant="success">
+            <Alert.Heading>Registration Success!</Alert.Heading>
+            <p>Please login to continue</p>
+            <hr />
+            <div className="d-flex justify-content-end">
+              <Button onClick={handleHide} variant="outline-success">
+                Close
+              </Button>
+            </div>
+          </Alert>
 
-        {!this.state.show && <Button onClick={handleShow}>Show Alert</Button>}
-      </>
-    );} else{
+          {!this.state.show && <Button onClick={handleShow}>Show Alert</Button>}
+        </>
+      );
+    } else {
       return (
         <>
           <Alert show={this.state.show} variant="danger">
@@ -55,7 +55,6 @@ class AlertDismissible extends Component {
         </>
       );
     }
-    
   }
 }
 export default AlertDismissible;

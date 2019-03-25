@@ -18,7 +18,8 @@ class Order extends Component {
     this.state = {
       items: [],
       collapse: false,
-      orderStatus: ""
+      orderStatus: "",
+      grandTotal: ""
     };
     this.toggle = this.toggle.bind(this);
   }
@@ -27,7 +28,13 @@ class Order extends Component {
     console.log("did mount");
     const items = this.props.items;
     const orderStatus = this.props.orderStatus;
-    this.setState({ items: items, orderStatus: orderStatus });
+    const grandTotal = this.props.grandTotal;
+    console.log("GT=" + grandTotal);
+    this.setState({
+      items: items,
+      orderStatus: orderStatus,
+      grandTotal: grandTotal
+    });
   }
 
   toggle(event) {
@@ -54,42 +61,35 @@ class Order extends Component {
   };
 
   onRemoveItem = id => {
+    const order_status = this.state.orderStatus;
     const items = this.state.items.filter(item => item._id !== id);
-    UPDATE_ORDER(this.props.orderId, { items }).then(() =>
-      this.setState({ items })
-    );
+    UPDATE_ORDER(this.props.orderId, {
+      status: order_status,
+      items: items
+    }).then(() => this.setState({ items }));
   };
 
-  onQtyIncrement = id => {
+  onQtyChange = (id, opp) => {
+    const order_status = this.state.orderStatus;
     const items = this.state.items;
+    console.log(items);
     const item = items.find(item => item._id === id);
-    if (item) {
+    if (item && opp === "plus") {
       ++item.quantity;
+    } else {
+      --item.quantity;
     }
-    const modifedItems = items.filter(item => item._id !== id);
-    modifedItems.push(item);
-    UPDATE_ORDER(this.props.orderId, modifedItems, this.state.orderStatus).then(
-      () => this.setState({ items })
-    );
+    this.setState({ items: items });
+    UPDATE_ORDER(this.props.orderId, { status: order_status, items: items });
+    this.calcGrandTotal();
   };
 
-  onQtyDecrement = id => {};
-
-  calcGrandTotal = items => {
-    console.log(items);
-    // let sum =0;
-
-    // let sum =items.map((quantity, item) => item.price*quantity);
-    // let arr = JSON.parse(items);
-    //  let i =arr[1].quantity;
-    //  console.log(i);
-
-    // let sum=0;
-    // for (let i in items){
-    //     let obj = i[0];
-    //     console.log(obj.quantity);}
-    //     sum+=i.item.price*i.quantity;
-    // return sum;
+  calcGrandTotal = () => {
+    const items = this.state.items;
+    const reducer = (acc, cur) => acc + cur;
+    const array = items.map(({ _id, item, quantity }) => item.price * quantity);
+    const sum = array.reduce(reducer);
+    this.setState({ grandTotal: sum });
   };
 
   render() {
@@ -134,12 +134,11 @@ class Order extends Component {
           </Row>
           <Collapse isOpen={this.state.collapse}>
             <Row>
-              <Table key={id} style={{ margin: "0.5rem" }}>
+              <Table hover key={id} style={{ margin: "0.5rem" }} size="sm">
                 <thead>
                   <tr>
                     <th />
                     <th>
-                      {" "}
                       <Label>Item</Label>
                     </th>
                     <th>
@@ -168,26 +167,49 @@ class Order extends Component {
                       </td>
                       <td>
                         {" "}
-                        <Label>
-                          {quantity}
-                          <Button onClick={this.onQtyIncrement.bind(this, _id)}>
+                        <div>
+                          <Label>{quantity}</Label>
+                          <Button
+                            className="btn-small"
+                            outline
+                            color="primary"
+                            onClick={this.onQtyChange.bind(this, _id, "plus")}
+                          >
                             +
                           </Button>
-                          <Button onClick={this.onQtyDecrement.bind(this, _id)}>
+                          <Button
+                            className="btn-small"
+                            outline
+                            color="danger"
+                            onClick={this.onQtyChange.bind(this, _id, "minus")}
+                          >
                             -
                           </Button>
-                        </Label>
+                        </div>
                       </td>
                       <td>
                         <Label>${item.price * quantity}</Label>
                       </td>
                     </tr>
                   ))}
+                  <tr>
+                    <td>
+                      <Label>
+                        <b>Grand Total</b>
+                      </Label>
+                    </td>
+                    <td />
+                    <td />
+                    <td>
+                      <Label>${this.state.grandTotal}</Label>
+                    </td>
+                  </tr>
                 </tbody>
               </Table>
             </Row>
           </Collapse>
         </ListGroupItem>
+        <br />
       </Container>
     );
   }

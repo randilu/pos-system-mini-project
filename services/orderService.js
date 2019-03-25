@@ -35,8 +35,8 @@ function getAllOrders() {
  **/
 async function createOrder(userId, items) {
     let modified_items = [];
-
-    if(items) {
+    let grand_total =0;
+    if (items) {
         for (let i = 0; i < items.length; i++) {
             let order_item = items[i];
             const item = await Item.findById(order_item.item_id);
@@ -51,10 +51,13 @@ async function createOrder(userId, items) {
             );
             modified_items.push(modified_order_item);
         }
+        grand_total = calculateGrandTotal(items);
     }
     const order = new Order({
         user_id: userId,
-        items: modified_items
+        items: modified_items,
+        grand_total: grand_total
+
     });
 
     return order.save();
@@ -119,9 +122,11 @@ async function updateOrder(orderId, items, status) {
         );
         modified_items.push(modified_order_item);
     }
+    const grand_total = calculateGrandTotal(modified_items);
     return (Order.findByIdAndUpdate(orderId, {
         status: status,
-        items: modified_items
+        items: modified_items,
+        grand_total: grand_total
     }, {new: true}));
 }
 
@@ -168,4 +173,11 @@ async function addItemToOrder(orderId, itemId, quantity) {
     return (Order.findByIdAndUpdate(orderId, {
         items: items
     }, {new: true}));
+}
+
+
+function calculateGrandTotal(items) {
+    const reducer = (acc, cur) => acc + cur;
+    const array = items.map(({_id, item, quantity}) => item.price * quantity);
+    return array.reduce(reducer);
 }
