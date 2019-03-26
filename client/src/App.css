@@ -48,3 +48,38 @@ button {
   text-align: center;
   /* background-color: #7681b9;  */
 }
+
+.btn-remove {
+  font-size: 0.9rem;
+  text-decoration: none;
+  width: rem;
+  height: 2rem;
+  float: bottom;
+  text-align: center;
+  background-color: #ff5733;
+  border-color: #ff5733;
+  /* background-color: #7681b9;  */
+}
+
+.btn-create {
+  font-size: 0.9rem;
+  text-decoration: none;
+  width: rem;
+  height: 2rem;
+  float: bottom;
+  text-align: center;
+  background-color: #48c9b0;
+  border-color: #48c9b0;
+  /* background-color: #7681b9;  */
+}
+
+.btn-info {
+  font-size: 0.9rem;
+  text-decoration: none;
+  width: rem;
+  height: 2rem;
+  float: bottom;
+  text-align: center;
+  background-color: #7681b9;
+  border-color: #7681b9;
+}

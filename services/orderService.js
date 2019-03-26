@@ -3,9 +3,6 @@ const Order = require('../models/Order');
 const OrderItem = require('../models/OrderItem');
 const Item = require('../models/Item');
 
-const itemService = require('../services/itemService');
-
-
 module.exports = {
     getAllOrders,
     getOrderById,
@@ -23,7 +20,7 @@ module.exports = {
  * returns Orders
  **/
 function getAllOrders() {
-    return Order.find().sort({date: -1});
+    return Order.find().sort({createdAt: -1});
 }
 
 /**
@@ -35,7 +32,7 @@ function getAllOrders() {
  **/
 async function createOrder(userId, items) {
     let modified_items = [];
-    let grand_total =0;
+    let grand_total = 0;
     if (items) {
         for (let i = 0; i < items.length; i++) {
             let order_item = items[i];
@@ -51,7 +48,7 @@ async function createOrder(userId, items) {
             );
             modified_items.push(modified_order_item);
         }
-        grand_total = calculateGrandTotal(items);
+        grand_total = calculateGrandTotal(modified_items);
     }
     const order = new Order({
         user_id: userId,
@@ -83,7 +80,7 @@ function deleteOrder(orderId) {
  * returns Order
  **/
 function getOrderById(order_id) {
-    return Order.findById(order_id);
+    return Order.findById(order_id).sort({createdAt: -1});
 }
 
 /**
@@ -94,7 +91,7 @@ function getOrderById(order_id) {
  * returns Order
  **/
 function getOrderByUserId(user_id) {
-    return Order.find().where('user_id', user_id);
+    return Order.find().where('user_id', user_id).sort({createdAt: -1});
 }
 
 /**
@@ -108,19 +105,21 @@ function getOrderByUserId(user_id) {
 async function updateOrder(orderId, items, status) {
     let modified_items = [];
 
-    for (let i = 0; i < items.length; i++) {
-        let order_item = items[i];
-        const item = await Item.findById(order_item.item.item_id);
-        const modified_order_item = new OrderItem({
-                item: {
-                    item_id: item.id,
-                    item_name: item.name,
-                    price: item.price
-                },
-                quantity: order_item.quantity
-            }
-        );
-        modified_items.push(modified_order_item);
+    if (items && items.length) {
+        for (let i = 0; i < items.length; i++) {
+            let order_item = items[i];
+            const item = await Item.findById(order_item.item.item_id);
+            const modified_order_item = new OrderItem({
+                    item: {
+                        item_id: item.id,
+                        item_name: item.name,
+                        price: item.price
+                    },
+                    quantity: order_item.quantity
+                }
+            );
+            modified_items.push(modified_order_item);
+        }
     }
     const grand_total = calculateGrandTotal(modified_items);
     return (Order.findByIdAndUpdate(orderId, {
@@ -157,7 +156,6 @@ async function addItemToOrder(orderId, itemId, quantity) {
 
     const item = await Item.findById(itemId);
 
-
     const new_order_item = new OrderItem({
             item: {
                 item_id: item.id,
@@ -169,15 +167,19 @@ async function addItemToOrder(orderId, itemId, quantity) {
     );
 
     items.push(new_order_item);
-
+    const grand_total = calculateGrandTotal(items);
     return (Order.findByIdAndUpdate(orderId, {
-        items: items
+        items: items,
+        grand_total: grand_total
     }, {new: true}));
 }
 
 
 function calculateGrandTotal(items) {
-    const reducer = (acc, cur) => acc + cur;
-    const array = items.map(({_id, item, quantity}) => item.price * quantity);
-    return array.reduce(reducer);
+    if (items && items.length) {
+        const reducer = (acc, cur) => acc + cur;
+        const array = items.map(({_id, item, quantity}) => item.price * quantity);
+        return array.reduce(reducer);
+    }
+    return 0;
 }

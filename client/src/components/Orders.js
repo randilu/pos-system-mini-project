@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import { Container, ListGroup, Button } from "reactstrap";
 import Label from "reactstrap/es/Label";
-import { GET_ORDERS_BY_USER_ID, CREATE_ORDER } from "../services/services";
+import {
+  GET_ORDERS_BY_USER_ID,
+  CREATE_ORDER,
+  DELETE_ORDER
+} from "../services/services";
 import Order from "./Order";
 
 class Orders extends Component {
@@ -35,43 +39,10 @@ class Orders extends Component {
   };
 
   onDeleteClick = id => {
-    this.props.deleteOrder(id);
-  };
-
-  calcGrandTotal = items => {
-    console.log(items);
-    // let sum =0;
-
-    // let sum =items.map((quantity, item) => item.price*quantity);
-    // let arr = JSON.parse(items);
-    //  let i =arr[1].quantity;
-    //  console.log(i);
-
-    // let sum=0;
-    // for (let i in items){
-    //     let obj = i[0];
-    //     console.log(obj.quantity);}
-    //     sum+=i.item.price*i.quantity;
-    // return sum;
-  };
-
-  calcGrandTotal = items => {
-    // let sum =0;
-
-    // let sum =items.map((quantity, item) => item.price*quantity);
-    // let arr = JSON.parse(items);
-    //  let i =arr[1].quantity;
-    //  console.log(i);
-    console.log(items);
-    let sum = 0;
-    for (let object in items) {
-      console.log(object[0].quantity);
-      // let obj = object[0];
-      // console.log(obj.quantity);
-      // console.log(object.quantity);
-      // sum+=object.item.price*object.quantity;
-    }
-    return sum;
+    DELETE_ORDER(id).then(res => {
+      const orders = this.state.orders.filter(order => order._id !== id);
+      this.setState({ orders });
+    });
   };
 
   render() {
@@ -80,12 +51,12 @@ class Orders extends Component {
     return (
       <Container style={{ marginTop: "2rem" }}>
         <Button
-          className="button"
+          className="btn-create"
           color="primary"
           size="md"
           onClick={this.onCreateClick}
         >
-          New Order
+          New Order +
         </Button>
         <br />
         <br />
@@ -99,6 +70,7 @@ class Orders extends Component {
               items={items}
               orderStatus={status}
               grandTotal={grand_total}
+              onRemoveOrder={this.onDeleteClick}
             />
           ))}
         </ListGroup>

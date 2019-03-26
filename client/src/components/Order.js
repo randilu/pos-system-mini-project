@@ -25,11 +25,9 @@ class Order extends Component {
   }
 
   componentDidMount() {
-    console.log("did mount");
     const items = this.props.items;
     const orderStatus = this.props.orderStatus;
     const grandTotal = this.props.grandTotal;
-    console.log("GT=" + grandTotal);
     this.setState({
       items: items,
       orderStatus: orderStatus,
@@ -37,20 +35,17 @@ class Order extends Component {
     });
   }
 
-  toggle(event) {
-    event.preventDefault();
+  toggle() {
+    // event.preventDefault();
     this.setState(state => ({ collapse: !state.collapse }));
   }
 
   onServeClick = id => {
     if (this.state.orderStatus !== "Served") {
-      console.log(id);
       const items = this.state.items;
       const orderStatus = "Served";
-      UPDATE_ORDER(id, { status: orderStatus, items: { items } }).then(res => {
-        console.log(res.data);
+      UPDATE_ORDER(id, { status: orderStatus, items }).then(res => {
         const orderStatus = res.data.status;
-        console.log(orderStatus);
         this.setState({ orderStatus });
       });
     }
@@ -65,14 +60,15 @@ class Order extends Component {
     const items = this.state.items.filter(item => item._id !== id);
     UPDATE_ORDER(this.props.orderId, {
       status: order_status,
-      items: items
-    }).then(() => this.setState({ items }));
+      items
+    })
+      .then(() => this.setState({ items }))
+      .then(this.calcGrandTotal);
   };
 
   onQtyChange = (id, opp) => {
     const order_status = this.state.orderStatus;
     const items = this.state.items;
-    console.log(items);
     const item = items.find(item => item._id === id);
     if (item && opp === "plus") {
       ++item.quantity;
@@ -87,13 +83,18 @@ class Order extends Component {
   calcGrandTotal = () => {
     const items = this.state.items;
     const reducer = (acc, cur) => acc + cur;
-    const array = items.map(({ _id, item, quantity }) => item.price * quantity);
-    const sum = array.reduce(reducer);
-    this.setState({ grandTotal: sum });
+    if (items && items.length) {
+      const array = items.map(
+        ({ _id, item, quantity }) => item.price * quantity
+      );
+      const sum = array.reduce(reducer);
+      this.setState({ grandTotal: sum });
+    } else {
+      this.setState({ grandTotal: 0 });
+    }
   };
 
   render() {
-    console.log("rendered");
     const id = this.props.orderId;
     const userId = this.props.userId;
     const items = this.state.items;
@@ -106,8 +107,8 @@ class Order extends Component {
           <Row>
             <Col>
               <Button
-                className="button"
-                color="success"
+                className="btn-create"
+                color="primary"
                 size="md"
                 onClick={this.onServeClick.bind(this, id)}
               >
@@ -115,7 +116,7 @@ class Order extends Component {
               </Button>
             </Col>
             <Col>
-              <Button color="primary">{orderStatus}</Button>
+              <Label color="blue">{orderStatus}</Label>
             </Col>
             <Col>
               <div className={disable}>
@@ -123,12 +124,22 @@ class Order extends Component {
                   userId={userId}
                   orderId={id}
                   getOrderStatus={this.getOrderStatus}
+                  calcGrandTotal={this.calcGrandTotal}
+                  onSelect={this.toggle}
                 />
               </div>
             </Col>
             <Col>
               <Button color="info" onClick={this.toggle}>
                 View Details
+              </Button>
+            </Col>
+            <Col>
+              <Button
+                className="btn-remove"
+                onClick={this.props.onRemoveOrder.bind(this, id)}
+              >
+                Delete
               </Button>
             </Col>
           </Row>
@@ -154,8 +165,7 @@ class Order extends Component {
                     <tr key={_id}>
                       <td>
                         <Button
-                          className="remove-btn"
-                          color="danger"
+                          className="btn-remove"
                           size="md"
                           onClick={this.onRemoveItem.bind(this, _id)}
                         >

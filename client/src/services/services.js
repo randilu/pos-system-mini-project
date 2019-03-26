@@ -19,8 +19,8 @@ export const GET_ORDER_BY_ID = id => axios.get(`${basePath}/orders/${id}`);
 export const GET_ORDERS_BY_USER_ID = id =>
   axios.get(`${basePath}/orders/user/${id}`);
 export const DELETE_ORDER = id => axios.delete(`${basePath}/orders/${id}`);
-export const UPDATE_ORDER = (id, orderItems, state) =>
-  axios.put(`${basePath}/orders/${id}`, orderItems, state);
+export const UPDATE_ORDER = (id, order) =>
+  axios.put(`${basePath}/orders/${id}`, order);
 export const ADD_ITEM_TO_ORDER = (id, itemId) =>
   axios.put(`${basePath}/orders/${id}/items`, itemId);
 
