@@ -36,16 +36,19 @@ button {
 
 .disable-element {
   pointer-events: none;
-  opacity: 0.4;
+  opacity: 0.6;
 }
 
 .btn-small {
   font-size: 0.9rem;
   text-decoration: none;
-  width: 2rem;
-  height: 2rem;
+  width: 1.5rem;
+  height: 1.5rem;
   float: bottom;
   text-align: center;
+  padding: 0px;
+  background-color: #7681b9;
+  border-color: #7681b9;
   /* background-color: #7681b9;  */
 }
 
@@ -82,4 +85,8 @@ button {
   text-align: center;
   background-color: #7681b9;
   border-color: #7681b9;
+}
+
+.login-container{
+  background-color: black
 }

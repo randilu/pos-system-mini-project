@@ -11,7 +11,8 @@ class UserLogin extends Component {
         userId: "",
         userName: "",
         isLoggedIn: false,
-        path:""
+        path:"",
+        token:"",
     };
 
     handleChange = event => {
@@ -33,6 +34,7 @@ class UserLogin extends Component {
                 this.setState({
                     userId: res.data.user.id,
                     userName: res.data.user.name,
+                    token: res.data.token,
                     isLoggedIn: true
                 });
                 this.props.getStatus(
@@ -40,6 +42,8 @@ class UserLogin extends Component {
                     this.state.userName,
                     this.state.isLoggedIn
                 );
+            } else{
+
             }
         });
     };
@@ -50,6 +54,7 @@ class UserLogin extends Component {
     }
 
     render() {
+        console.log(this.state.token);
         if(this.state.path==="signUp"){
             return(
                 <UserRegister/>

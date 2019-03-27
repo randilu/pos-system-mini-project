@@ -8,6 +8,11 @@ const User = require('../models/User');
 const userService = require('../services/userService')
 
 // POST request to authenticate User.
+/**
+ * @route   GET api/auth
+ * @desc    Authenticate user
+ * @access  Public
+ */
 router.post('/', authenticateUser);
 /**
  * @route   GET api/auth/user

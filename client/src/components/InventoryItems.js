@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { Container, Button, ListGroup, ListGroupItem } from "reactstrap";
-import { CSSTransition, TransitionGroup } from "react-transition-group";
 import Label from "reactstrap/es/Label";
 import { GET_ITEMS, DELETE_ITEM } from "../services/services";
+import ItemModal from "./ItemModal";
 
 class InventoryItems extends Component {
   constructor(props) {
@@ -28,28 +28,29 @@ class InventoryItems extends Component {
     });
   };
 
+  onAddItem = item => {
+    this.setState({ items: [...this.state.items, item] });
+  };
+
   render() {
     const items = this.state.items;
     return (
       <Container>
-        <ListGroup>
-          <TransitionGroup className="inventory-list">
-            {items.map(({ _id, name, price }) => (
-              <CSSTransition key={_id} timeout={500} classNames="fade">
-                <ListGroupItem>
-                  <Button
-                    className="btn-remove"
-                    size="md"
-                    onClick={this.onDeleteClick.bind(this, _id)}
-                  >
-                    Delete
-                  </Button>
-                  <Label>{name}</Label>
-                  <Label className="item-price-lab">${price}</Label>
-                </ListGroupItem>
-              </CSSTransition>
-            ))}
-          </TransitionGroup>
+        <ItemModal onAddItem={this.onAddItem} />
+        <ListGroup className="inventory-list">
+          {items.map(({ _id, name, price }) => (
+            <ListGroupItem key={_id}>
+              <Button
+                className="btn-remove"
+                size="md"
+                onClick={this.onDeleteClick.bind(this, _id)}
+              >
+                Delete
+              </Button>
+              <Label>{name}</Label>
+              <Label className="item-price-lab">${price}</Label>
+            </ListGroupItem>
+          ))}
         </ListGroup>
       </Container>
     );

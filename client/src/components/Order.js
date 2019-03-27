@@ -72,9 +72,12 @@ class Order extends Component {
     const item = items.find(item => item._id === id);
     if (item && opp === "plus") {
       ++item.quantity;
-    } else {
+    } else if (item.quantity > 1) {
       --item.quantity;
+    } else {
+      items.filter(item => item._id !== id);
     }
+
     this.setState({ items: items });
     UPDATE_ORDER(this.props.orderId, { status: order_status, items: items });
     this.calcGrandTotal();
@@ -145,7 +148,13 @@ class Order extends Component {
           </Row>
           <Collapse isOpen={this.state.collapse}>
             <Row>
-              <Table hover key={id} style={{ margin: "0.5rem" }} size="sm">
+              <Table
+                hover
+                key={id}
+                style={{ margin: "0.5rem" }}
+                size="sm"
+                className={disable}
+              >
                 <thead>
                   <tr>
                     <th />
@@ -181,7 +190,6 @@ class Order extends Component {
                           <Label>{quantity}</Label>
                           <Button
                             className="btn-small"
-                            outline
                             color="primary"
                             onClick={this.onQtyChange.bind(this, _id, "plus")}
                           >
@@ -189,8 +197,7 @@ class Order extends Component {
                           </Button>
                           <Button
                             className="btn-small"
-                            outline
-                            color="danger"
+                            color="primary"
                             onClick={this.onQtyChange.bind(this, _id, "minus")}
                           >
                             -

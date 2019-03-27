@@ -9,6 +9,7 @@ import {
     Label,
     Input
 } from "reactstrap";
+import { CREATE_ITEM } from "../services/services";
 
 
 class ItemModal extends Component {
@@ -33,15 +34,17 @@ class ItemModal extends Component {
 
     onSubmit = (event) => {
         event.preventDefault();
-
         const newItem = {
             name: this.state.name,
             price: this.state.price
         };
 
         // Add item via addItem action
-        this.props.addItem(newItem);
-
+        CREATE_ITEM(newItem).then(
+            res => {
+                this.props.onAddItem(res.data);
+            }
+            );
         // Close Modal
         this.toggle();
     };
@@ -50,11 +53,13 @@ class ItemModal extends Component {
         return (
             <div>
                 <Button
-                    color="info"
+                    className="btn-create"
+                    color="primary"
+                    size="md"
                     style={{marginBottom: "2rem"}}
                     onClick={this.toggle}
                 >
-                    Add Item
+                    Add Item +
                 </Button>
 
                 <Modal isOpen={this.state.modal} toggle={this.toggle}>
@@ -81,7 +86,9 @@ class ItemModal extends Component {
                                     onChange={this.onChange}
                                 />
                                 <Button
-                                    color="success"
+                                    className="btn-create"
+                                    color="primary"
+                                    size="md"
                                     style={{marginTop: '2rem'}}
                                     block
                                 >Add</Button>
