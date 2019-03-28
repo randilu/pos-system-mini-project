@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Dropdown } from "react-bootstrap";
 import { GET_ITEMS, ADD_ITEM_TO_ORDER } from "../services/services";
+import { getToken } from "../helpers/authHelper";
 
 class SelectItemDropdown extends Component {
   constructor(props) {
@@ -14,19 +15,19 @@ class SelectItemDropdown extends Component {
 
   // life cycle method which runs when the component mount
   componentDidMount() {
-    GET_ITEMS().then(res => {
+    GET_ITEMS(getToken()).then(res => {
       const items = res.data;
-      // console.log(items);
       this.setState({ items: items, userId: this.props.userId });
     });
   }
 
   handleOnSelect = itemId => {
-    ADD_ITEM_TO_ORDER(this.props.orderId, { item_id: itemId }).then(res => {
-      this.props.getOrderStatus(res.data.items);
-      // this.props.onSelect();
-      this.props.calcGrandTotal();
-    });
+    ADD_ITEM_TO_ORDER(this.props.orderId, { item_id: itemId }, getToken()).then(
+      res => {
+        this.props.getOrderStatus(res.data.items);
+        this.props.calcGrandTotal();
+      }
+    );
   };
 
   render() {

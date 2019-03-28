@@ -7,6 +7,7 @@ import {
   DELETE_ORDER
 } from "../services/services";
 import Order from "./Order";
+import { getToken } from "../helpers/authHelper";
 
 class Orders extends Component {
   constructor(props) {
@@ -21,7 +22,7 @@ class Orders extends Component {
   componentDidMount() {
     const userId = this.props.userId;
     this.setState({ userId: userId });
-    GET_ORDERS_BY_USER_ID(userId).then(res => {
+    GET_ORDERS_BY_USER_ID(userId, getToken()).then(res => {
       const orders = res.data;
       this.setState({ orders });
     });
@@ -30,7 +31,7 @@ class Orders extends Component {
   onCreateClick = () => {
     const userId = this.state.userId;
     const orders = this.state.orders;
-    CREATE_ORDER({ user_id: userId }).then(res => {
+    CREATE_ORDER({ user_id: userId }, getToken()).then(res => {
       if (res.status === 200) {
         orders.unshift(res.data);
         this.setState({ orders });
@@ -39,7 +40,7 @@ class Orders extends Component {
   };
 
   onDeleteClick = id => {
-    DELETE_ORDER(id).then(res => {
+    DELETE_ORDER(id, getToken()).then(res => {
       const orders = this.state.orders.filter(order => order._id !== id);
       this.setState({ orders });
     });

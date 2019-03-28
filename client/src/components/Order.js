@@ -11,6 +11,7 @@ import {
 } from "reactstrap";
 import SelectItemDropdown from "./SelectItemDropdown";
 import { UPDATE_ORDER } from "../services/services";
+import { getToken } from "../helpers/authHelper";
 
 class Order extends Component {
   constructor(props) {
@@ -44,7 +45,7 @@ class Order extends Component {
     if (this.state.orderStatus !== "Served") {
       const items = this.state.items;
       const orderStatus = "Served";
-      UPDATE_ORDER(id, { status: orderStatus, items }).then(res => {
+      UPDATE_ORDER(id, { status: orderStatus, items }, getToken()).then(res => {
         const orderStatus = res.data.status;
         this.setState({ orderStatus });
       });
@@ -58,10 +59,14 @@ class Order extends Component {
   onRemoveItem = id => {
     const order_status = this.state.orderStatus;
     const items = this.state.items.filter(item => item._id !== id);
-    UPDATE_ORDER(this.props.orderId, {
-      status: order_status,
-      items
-    })
+    UPDATE_ORDER(
+      this.props.orderId,
+      {
+        status: order_status,
+        items
+      },
+      getToken()
+    )
       .then(() => this.setState({ items }))
       .then(this.calcGrandTotal);
   };
@@ -79,7 +84,11 @@ class Order extends Component {
     }
 
     this.setState({ items: items });
-    UPDATE_ORDER(this.props.orderId, { status: order_status, items: items });
+    UPDATE_ORDER(
+      this.props.orderId,
+      { status: order_status, items: items },
+      getToken()
+    );
     this.calcGrandTotal();
   };
 

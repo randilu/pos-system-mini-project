@@ -5,9 +5,9 @@ import {
   Button,
   InputGroup,
   Container,
-  ListGroupItem,
+  ListGroupItem
 } from "react-bootstrap";
-import {Label} from "reactstrap"
+import { Label } from "reactstrap";
 import { CREATE_USER } from "../services/services";
 import UserLogin from "./UserLogin";
 import AlertDismissible from "./AlertDismissable";
@@ -32,7 +32,7 @@ class UserRegister extends Component {
     });
   };
 
-  handleSubmit = event => {
+  handleRegisterSubmit = event => {
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
@@ -68,77 +68,83 @@ class UserRegister extends Component {
     }
     return (
       <Container>
-        <ListGroupItem style={{scale: "center"}} >
-        <Label><h2>Sign Up Here!</h2></Label>
-        <Form noValidate validated={validated} onSubmit={this.handleSubmit}>
-          <Form.Row>
-            <Form.Group as={Col} md="6" controlId="validationCustom01">
-              <Form.Label>First name</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                name="firstName"
-                placeholder="enter your first name"
-                onChange={this.handleChange}
-              />
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-            </Form.Group>
-            <Form.Group as={Col} md="6" controlId="validationCustom02">
-              <Form.Label>Last name</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                placeholder="enter your last name"
-                name="lastName"
-                onChange={this.handleChange}
-              />
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-            </Form.Group>
-          </Form.Row>
-          <Form.Row>
-            <Form.Group as={Col} md="6" controlId="validationCustomUsername">
-              <Form.Label>Email</Form.Label>
-              <InputGroup>
-                <InputGroup.Prepend>
-                  <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
-                </InputGroup.Prepend>
+        <ListGroupItem style={{ scale: "center" }}>
+          <Label>
+            <h2>Sign Up Here!</h2>
+          </Label>
+          <Form
+            noValidate
+            validated={validated}
+            onSubmit={this.handleRegisterSubmit}
+          >
+            <Form.Row>
+              <Form.Group as={Col} md="6" controlId="validationCustom01">
+                <Form.Label>First name</Form.Label>
                 <Form.Control
                   required
-                  type="email"
-                  placeholder="enter your email"
-                  aria-describedby="inputGroupPrepend"
-                  name="email"
+                  type="text"
+                  name="firstName"
+                  placeholder="enter your first name"
+                  onChange={this.handleChange}
+                />
+                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group as={Col} md="6" controlId="validationCustom02">
+                <Form.Label>Last name</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  placeholder="enter your last name"
+                  name="lastName"
+                  onChange={this.handleChange}
+                />
+                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+              </Form.Group>
+            </Form.Row>
+            <Form.Row>
+              <Form.Group as={Col} md="6" controlId="validationCustomUsername">
+                <Form.Label>Email</Form.Label>
+                <InputGroup>
+                  <InputGroup.Prepend>
+                    <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
+                  </InputGroup.Prepend>
+                  <Form.Control
+                    required
+                    type="email"
+                    placeholder="enter your email"
+                    aria-describedby="inputGroupPrepend"
+                    name="email"
+                    onChange={this.handleChange}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    Please enter an email.
+                  </Form.Control.Feedback>
+                </InputGroup>
+              </Form.Group>
+
+              <Form.Group as={Col} md="6" controlId="validationCustom03">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  required
+                  type="password"
+                  placeholder="enter a password"
+                  name="password"
                   onChange={this.handleChange}
                 />
                 <Form.Control.Feedback type="invalid">
-                  Please enter an email.
+                  Please provide a valid password.
                 </Form.Control.Feedback>
-              </InputGroup>
-            </Form.Group>
-
-            <Form.Group as={Col} md="6" controlId="validationCustom03">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
+              </Form.Group>
+            </Form.Row>
+            <Form.Group>
+              <Form.Check
                 required
-                type="password"
-                placeholder="enter a password"
-                name="password"
-                onChange={this.handleChange}
+                label="Agree to terms and conditions"
+                feedback="You must agree before submitting."
               />
-              <Form.Control.Feedback type="invalid">
-                Please provide a valid password.
-              </Form.Control.Feedback>
             </Form.Group>
-          </Form.Row>
-          <Form.Group>
-            <Form.Check
-              required
-              label="Agree to terms and conditions"
-              feedback="You must agree before submitting."
-            />
-          </Form.Group>
-          <Button type="submit">Submit form</Button>
-        </Form>
+            <Button type="submit">Submit form</Button>
+          </Form>
         </ListGroupItem>
       </Container>
     );
