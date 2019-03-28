@@ -40,7 +40,7 @@ class AppNavbar extends Component {
                 <NavItem>
                   <Row>
                     <NavLink href="#">
-                      <b>Hi! {this.props.userName}</b>
+                      <b>{this.props.userName}</b>
                     </NavLink>
                     <NavLink href="#" onClick={this.handleLogOut}>
                       <b>{this.props.logoutLink}</b>

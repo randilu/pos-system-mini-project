@@ -29,13 +29,12 @@ class App extends Component {
     if (this.state.isLoggedin) {
       return (
         <div className="App">
+          <AppNavbar
+            userName={this.state.userName}
+            logoutLink="logout"
+            getStatus={this.getStatus}
+          />
           <Container>
-            <AppNavbar
-              userName={this.state.userName}
-              logoutLink="logout"
-              getStatus={this.getStatus}
-            />
-
             <InventoryItems />
             <Orders userId={this.state.userId} />
           </Container>
