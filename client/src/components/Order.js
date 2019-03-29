@@ -1,17 +1,19 @@
 import React, { Component } from "react";
 import {
-  Container,
   Button,
   ListGroupItem,
   Row,
   Col,
   Table,
   Label,
-  Collapse
+  Collapse,
+  Badge,
+  ListGroup
 } from "reactstrap";
 import SelectItemDropdown from "./SelectItemDropdown";
 import { UPDATE_ORDER } from "../services/services";
 import { getToken } from "../helpers/authHelper";
+import { NotificationManager } from "react-notifications";
 
 class Order extends Component {
   constructor(props) {
@@ -20,6 +22,7 @@ class Order extends Component {
       items: [],
       collapse: false,
       orderStatus: "",
+      badgeColor: "",
       grandTotal: ""
     };
     this.toggle = this.toggle.bind(this);
@@ -29,10 +32,16 @@ class Order extends Component {
     const items = this.props.items;
     const orderStatus = this.props.orderStatus;
     const grandTotal = this.props.grandTotal;
+
+    let badgeColor;
+    orderStatus === "Pending"
+      ? (badgeColor = "warning")
+      : (badgeColor = "success");
     this.setState({
       items: items,
       orderStatus: orderStatus,
-      grandTotal: grandTotal
+      grandTotal: grandTotal,
+      badgeColor: badgeColor
     });
   }
 
@@ -43,11 +52,14 @@ class Order extends Component {
 
   onServeClick = id => {
     if (this.state.orderStatus !== "Served") {
+      NotificationManager.success("Success message", "Marked as Served!");
+      NotificationManager.info("Note: You won't be able to edit Served Orders");
       const items = this.state.items;
       const orderStatus = "Served";
+      const badgeColor = "success";
       UPDATE_ORDER(id, { status: orderStatus, items }, getToken()).then(res => {
         const orderStatus = res.data.status;
-        this.setState({ orderStatus });
+        this.setState({ orderStatus, badgeColor });
       });
     }
   };
@@ -111,11 +123,32 @@ class Order extends Component {
     const userId = this.props.userId;
     const items = this.state.items;
     const orderStatus = this.state.orderStatus;
+    const badgeColor = this.state.badgeColor;
     const disable =
       this.state.orderStatus === "Served" ? "disable-element" : "";
     return (
-      <Container>
+      <ListGroup>
         <ListGroupItem key={id}>
+          <Row>
+            <Col>
+              <Badge color="secondary">
+                <b>#{id}</b>
+              </Badge>
+              <Badge color={badgeColor} style={{ margin: "1rem" }}>
+                {orderStatus}
+              </Badge>
+            </Col>
+            <Col>
+              <h3>
+                <Badge
+                  color="secondary"
+                  style={{ float: "right", margin: "1rem" }}
+                >
+                  ${this.state.grandTotal}
+                </Badge>
+              </h3>
+            </Col>
+          </Row>
           <Row>
             <Col>
               <Button
@@ -126,9 +159,6 @@ class Order extends Component {
               >
                 Serve Order
               </Button>
-            </Col>
-            <Col>
-              <Label color="blue">{orderStatus}</Label>
             </Col>
             <Col>
               <div className={disable}>
@@ -236,7 +266,7 @@ class Order extends Component {
           </Collapse>
         </ListGroupItem>
         <br />
-      </Container>
+      </ListGroup>
     );
   }
 }

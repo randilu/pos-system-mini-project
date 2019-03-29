@@ -1,16 +1,12 @@
 import React, { Component } from "react";
-import {
-  InputGroup,
-  Input,
-  InputGroupAddon,
-  Button,
-  Label,
-  Alert
-} from "reactstrap";
+import { Form, Button, label } from "react-bootstrap";
+
 import { AUTHENTICATE_USER } from "../services/services";
 import UserRegister from "./UserRegister";
 import { ListGroupItem } from "react-bootstrap";
 import { setToken } from "../helpers/authHelper";
+import "react-notifications/lib/notifications.css";
+import { NotificationManager } from "react-notifications";
 
 class UserLogin extends Component {
   state = {
@@ -39,25 +35,41 @@ class UserLogin extends Component {
     };
 
     AUTHENTICATE_USER(user)
-      .then(res => {
-        if (res.status === 200) {
-          const { token, user } = res.data;
-          setToken(token);
-          this.setState({
-            userId: user.id,
-            userName: user.name,
-            token: token,
-            isLoggedIn: true
-          });
-          this.props.getStatus(
-            this.state.userId,
-            this.state.userName,
-            this.state.isLoggedIn
-          );
+      .then(
+        res => {
+          if (res.status === 200) {
+            const { token, user } = res.data;
+            setToken(token);
+            this.setState({
+              userId: user.id,
+              userName: user.name,
+              token: token,
+              isLoggedIn: true
+            });
+            this.props.getStatus(
+              this.state.userId,
+              this.state.userName,
+              this.state.isLoggedIn
+            );
+          }
+          NotificationManager.success("Login Success", "Welcome Back!");
+        },
+        error => {
+          if (error) {
+            NotificationManager.error(
+              "Login Error",
+              "Invalid Credentials!",
+              2000
+            );
+          }
         }
-      })
-      .catch(res => {
-        console.log(res);
+      )
+      .catch(() => {
+        NotificationManager.error(
+          "Unexpected Error",
+          "Oops seems like something went wrong!",
+          2000
+        );
         this.setState({ isAuthenticated: false });
       });
   };
@@ -68,57 +80,44 @@ class UserLogin extends Component {
   };
 
   render() {
-    console.log(this.state.token);
     if (this.state.path === "signUp") {
       return <UserRegister />;
     }
     return (
       <div>
         <ListGroupItem>
-          <Label>
+          <label>
             <h2>Login to Your Account Here!</h2>
-          </Label>
-          <br />
-          <br />
-          <InputGroup>
-            <InputGroupAddon addonType="prepend" size="20">
-              Enter email
-            </InputGroupAddon>
-            <Input
-              placeholder="Enter email"
-              type="email"
-              name="email"
-              onChange={this.handleChange}
-            />
-          </InputGroup>
-          <br />
-          <br />
-          <InputGroup>
-            <InputGroupAddon addonType="prepend">
-              Enter Password
-            </InputGroupAddon>
-            <Input
-              placeholder="password"
-              type="password"
-              name="password"
-              onChange={this.handleChange}
-            />
-          </InputGroup>
-          <br />
-          {this.state.isAuthenticated ? (
-            <Alert color="warning">not logged in</Alert>
-          ) : (
-            <Alert color="danger">
-              Login Failed! Please enter valid credentials!{" "}
-            </Alert>
-          )}
-          <br />
-          <Button color="info" onClick={this.handleLoginSubmit}>
-            Login
-          </Button>
-          <Button color="info" onClick={this.handleSignUp}>
-            Sign Up
-          </Button>
+          </label>
+          <Form>
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>Email address</Form.Label>
+              <Form.Control
+                placeholder="Enter email"
+                type="email"
+                name="email"
+                onChange={this.handleChange}
+              />
+              <Form.Text className="text-muted">
+                We'll never share your email with anyone else.
+              </Form.Text>
+            </Form.Group>
+            <Form.Group controlId="formBasicPassword">
+              <Form.Label>Password</Form.Label>
+              <Form.Control
+                placeholder="Password"
+                type="password"
+                name="password"
+                onChange={this.handleChange}
+              />
+            </Form.Group>
+            <Button variant="primary" onClick={this.handleLoginSubmit}>
+              Login
+            </Button>
+            <Button variant="primary" onClick={this.handleSignUp}>
+              Sign Up
+            </Button>
+          </Form>
         </ListGroupItem>
       </div>
     );

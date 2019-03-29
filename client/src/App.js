@@ -6,6 +6,7 @@ import { Container } from "reactstrap";
 import Orders from "./components/Orders";
 import InventoryItems from "./components/InventoryItems";
 import UserLogin from "./components/UserLogin";
+import { NotificationContainer } from "react-notifications";
 
 class App extends Component {
   constructor(props) {
@@ -31,13 +32,14 @@ class App extends Component {
         <div className="App">
           <AppNavbar
             userName={this.state.userName}
-            logoutLink="logout"
+            logoutLink="Logout"
             getStatus={this.getStatus}
           />
           <Container>
             <InventoryItems />
             <Orders userId={this.state.userId} />
           </Container>
+          <NotificationContainer />
         </div>
       );
     }
@@ -47,6 +49,7 @@ class App extends Component {
         <Container>
           <UserLogin getStatus={this.getStatus} />
         </Container>
+        <NotificationContainer />
       </div>
     );
   }

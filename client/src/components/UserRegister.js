@@ -10,7 +10,7 @@ import {
 import { Label } from "reactstrap";
 import { CREATE_USER } from "../services/services";
 import UserLogin from "./UserLogin";
-import AlertDismissible from "./AlertDismissable";
+import { NotificationManager } from "react-notifications";
 
 class UserRegister extends Component {
   constructor(props) {
@@ -45,15 +45,35 @@ class UserRegister extends Component {
       name: this.state.firstName.concat(this.state.lastName)
     };
     CREATE_USER(user)
-      .then(res => {
-        if (res.status === 200) {
-          console.log("successful registratuon");
-          this.setState({ registerStatus: true });
-        } else {
-          console.log("registration failed");
+      .then(
+        res => {
+          if (res.status === 200) {
+            NotificationManager.success(
+              "Registration Success",
+              "Please Login to Continue!"
+            );
+            this.setState({ registerStatus: true });
+          } else {
+            console.log("registration failed");
+          }
+        },
+        error => {
+          if (error) {
+            NotificationManager.error(
+              "Registration Failed",
+              "Incomplete fields!",
+              2000
+            );
+          }
         }
-      })
-      .catch(console.log("error occured while registering"));
+      )
+      .catch(
+        NotificationManager.error(
+          "Unexpected Error",
+          "Oops seems like something went wrong!",
+          2000
+        )
+      );
   };
 
   render() {
@@ -61,7 +81,6 @@ class UserRegister extends Component {
     if (this.state.registerStatus) {
       return (
         <Container>
-          <AlertDismissible success={this.state.registerStatus} />
           <UserLogin />
         </Container>
       );

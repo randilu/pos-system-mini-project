@@ -3,7 +3,8 @@ import { Container, Button, ListGroup, ListGroupItem } from "reactstrap";
 import Label from "reactstrap/es/Label";
 import { GET_ITEMS, DELETE_ITEM } from "../services/services";
 import ItemModal from "./ItemModal";
-import {getToken} from "../helpers/authHelper";
+import { getToken } from "../helpers/authHelper";
+import { NotificationManager } from "react-notifications";
 
 class InventoryItems extends Component {
   constructor(props) {
@@ -24,6 +25,11 @@ class InventoryItems extends Component {
 
   onDeleteClick = id => {
     DELETE_ITEM(id, getToken()).then(res => {
+      NotificationManager.warning(
+        "Delete Warning",
+        "Item will be permanantly deleted from the Store",
+        2000
+      );
       const items = this.state.items.filter(item => item._id !== id);
       this.setState({ items });
     });
@@ -38,7 +44,7 @@ class InventoryItems extends Component {
     return (
       <Container>
         <ItemModal onAddItem={this.onAddItem} />
-        <ListGroup className="inventory-list">
+        <ListGroup>
           {items.map(({ _id, name, price }) => (
             <ListGroupItem key={_id}>
               <Button

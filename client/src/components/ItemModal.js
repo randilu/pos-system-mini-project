@@ -11,6 +11,7 @@ import {
 } from "reactstrap";
 import { CREATE_ITEM } from "../services/services";
 import { getToken } from "../helpers/authHelper";
+import { NotificationManager } from "react-notifications";
 
 class ItemModal extends Component {
   state = {
@@ -42,6 +43,7 @@ class ItemModal extends Component {
     // Add item via addItem action
     CREATE_ITEM(newItem, getToken()).then(res => {
       this.props.onAddItem(res.data);
+      NotificationManager.success("Added successfully", "Item added to store!");
     });
     // Close Modal
     this.toggle();

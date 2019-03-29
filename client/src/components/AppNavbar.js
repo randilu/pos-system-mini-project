@@ -11,6 +11,7 @@ import {
 } from "reactstrap";
 import { Row } from "react-bootstrap";
 import { removeToken } from "../helpers/authHelper";
+import { NotificationManager } from "react-notifications";
 
 class AppNavbar extends Component {
   state = {
@@ -26,6 +27,7 @@ class AppNavbar extends Component {
   handleLogOut = () => {
     removeToken();
     this.props.getStatus("", "", false);
+    NotificationManager.success("Success message", "Logged out!");
   };
 
   render() {

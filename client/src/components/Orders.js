@@ -8,6 +8,7 @@ import {
 } from "../services/services";
 import Order from "./Order";
 import { getToken } from "../helpers/authHelper";
+import { NotificationManager } from "react-notifications";
 
 class Orders extends Component {
   constructor(props) {
@@ -35,11 +36,17 @@ class Orders extends Component {
       if (res.status === 200) {
         orders.unshift(res.data);
         this.setState({ orders });
+        NotificationManager.success("Success message", "Created New Order!");
       }
     });
   };
 
   onDeleteClick = id => {
+    NotificationManager.warning(
+      "Warning message",
+      "This order will be removed completely!",
+      2000
+    );
     DELETE_ORDER(id, getToken()).then(res => {
       const orders = this.state.orders.filter(order => order._id !== id);
       this.setState({ orders });

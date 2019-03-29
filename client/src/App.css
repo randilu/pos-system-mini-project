@@ -60,7 +60,7 @@ button {
   float: bottom;
   text-align: center;
   background-color: #ff5733;
-  border-color: #ff5733;
+  border-color: #f1948a;
   /* background-color: #7681b9;  */
 }
 
@@ -71,8 +71,8 @@ button {
   height: 2rem;
   float: bottom;
   text-align: center;
-  background-color: #48c9b0;
-  border-color: #48c9b0;
+  background-color: #a1c2bc;
+  border-color: #a1c2bc;
   /* background-color: #7681b9;  */
 }
 
@@ -83,10 +83,10 @@ button {
   height: 2rem;
   float: bottom;
   text-align: center;
-  background-color: #7681b9;
-  border-color: #7681b9;
+  background-color: #a1c2bc;
+  border-color: #a1c2bc;
 }
 
-.login-container{
-  background-color: black
+.login-container {
+  background-color: black;
 }
