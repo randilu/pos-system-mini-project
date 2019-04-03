@@ -87,7 +87,7 @@ class UserRegister extends Component {
     }
     return (
       <Container>
-        <ListGroupItem style={{ scale: "center" }}>
+        <ListGroupItem className="trans" style={{ scale: "center" }}>
           <Label>
             <h2>Sign Up Here!</h2>
           </Label>

@@ -128,7 +128,7 @@ class Order extends Component {
       this.state.orderStatus === "Served" ? "disable-element" : "";
     return (
       <ListGroup>
-        <ListGroupItem key={id}>
+        <ListGroupItem key={id} className="trans">
           <Row>
             <Col>
               <Badge color="secondary">
@@ -141,7 +141,7 @@ class Order extends Component {
             <Col>
               <h3>
                 <Badge
-                  color="secondary"
+                  color="success"
                   style={{ float: "right", margin: "1rem" }}
                 >
                   ${this.state.grandTotal}

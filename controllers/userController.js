@@ -63,33 +63,6 @@ function getUserById(req, res) {
         });
 }
 
-/*
-
-/!**
- *
- * Handle user create on POST.
- *
- *!/
-function createUser(req, res) {
-    // Validate request
-    if (!req.body.email || !req.body.password) {
-        return res.status(400).send({
-            message: "Username or Password can not be empty"
-        });
-    }
-
-    userService.createUser(req.body.email, req.body.password, req.body.role)
-        .then(user => user ? res.json(user) : res.status(404).send({
-            message: "User not found with id " + req.params.id
-        }))
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Error occurred while creating the User."
-            });
-        });
-}
-*/
-
 /**
  *
  * Display user delete form on GET.
@@ -184,26 +157,6 @@ function authenticateUser(req, res) {
     }
 
     userService.authenticateUser(res, req.body.name, req.body.email, req.body.password, req.body.role)
-        /*.then(user => user ?
-            jwt.sign(
-                {id: user.id},
-                config.get('jwtSecret'),
-                {expiresIn: 3600},
-                (err, token) => {
-                    if (err) throw err;
-                    res.json({
-                            token,
-                            user: {
-                                id: user.id,
-                                name: user.name,
-                                email: user.email,
-                            }
-                        }
-                    )
-                }
-            ) : res.status(400).send({
-                message: "User doesn't exist "
-            }))*/
         .catch(err => {
             res.status(500).send({
                 message: err.message || "Error occurred while creating the User."

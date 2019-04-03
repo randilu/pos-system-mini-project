@@ -1,25 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const itemService = require('../services/itemService');
-const auth = require('../middleware/auth');
-
 
 // Routes
 
 // GET request for list of all Item items.
-router.get('/', auth, getAllItems);
+router.get('/', getAllItems);
 
 // POST request for creating Item.
-router.post('/', auth, createItem);
+router.post('/', createItem);
 
 // GET request for one Item.
-router.get('/:id', auth, getItemById);
+router.get('/:id', getItemById);
 
 // DELETE request to delete Item.
-router.delete('/:id', auth, deleteItem);
+router.delete('/:id', deleteItem);
 
 // PUT request to update Item.
-router.put('/:id', auth, updateItem);
+router.put('/:id', updateItem);
 
 module.exports = router;
 

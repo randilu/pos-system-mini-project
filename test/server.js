@@ -1,10 +1,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const router = require('./routes/router');
+const item_router = require('../controllers/itemController');
+const order_router = require('../controllers/orderController');
+const user_router = require('../controllers/userController');
 const config = require('config');
-const cors = require('cors');
 
 const app = express();
+const cors = require('cors');
 
 //Cors
 app.use(cors());
@@ -13,7 +15,7 @@ app.use(cors());
 app.use(express.json());
 
 // DB config
-const db = config.get('mongoURI');
+const db = config.get('mongoTestURI');
 
 // Connect to Mongo
 mongoose
@@ -25,9 +27,14 @@ mongoose
     .catch((err) => console.log(err));
 
 // Use router
-app.use('/api/v1', router);
+app.use('/items', item_router);
+app.use('/orders', order_router);
+app.use('/users', user_router);
 
 const port = process.env.PORT || 5000;
 
-module.exports = app.listen(port, () => console.log(`server started on port ${port}`));
+const server = app.listen(port, () => console.log(`server started on port ${port}`));
+
+module.exports = server;
+
 

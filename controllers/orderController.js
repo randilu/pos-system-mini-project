@@ -2,30 +2,29 @@ const Order = require('../models/Order');
 const express = require('express');
 const router = express.Router();
 const orderService = require('../services/orderService');
-const auth = require('../middleware/auth');
 
 // Routes
 
 // GET request for list of all Order items.
-router.get('/', auth, getAllOrders);
+router.get('/', getAllOrders);
 
 // POST request for creating Order.
-router.post('/', auth, createOrder);
+router.post('/', createOrder);
 
 // GET request for one Order.
-router.get('/:id', auth, getOrderById);
+router.get('/:id', getOrderById);
 
 // DELETE request to delete Order.
-router.delete('/:id', auth, deleteOrder);
+router.delete('/:id', deleteOrder);
 
 // PUT request to update Order.
-router.put('/:id', auth, updateOrder);
+router.put('/:id', updateOrder);
 
 // PUT request to add item to an Order.
-router.put('/:id/items', auth, addItem);
+router.put('/:id/items', addItem);
 
 // GET request for one orders of a user.
-router.get('/user/:id', auth, getOrderByUserId);
+router.get('/user/:id', getOrderByUserId);
 
 module.exports = router;
 

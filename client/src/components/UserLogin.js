@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, Button, label } from "react-bootstrap";
+import { Form, Button, label, Container } from "react-bootstrap";
 
 import { AUTHENTICATE_USER } from "../services/services";
 import UserRegister from "./UserRegister";
@@ -85,7 +85,8 @@ class UserLogin extends Component {
     }
     return (
       <div>
-        <ListGroupItem>
+        <Container >
+        <ListGroupItem className="trans">
           <label>
             <h2>Login to Your Account Here!</h2>
           </label>
@@ -119,6 +120,7 @@ class UserLogin extends Component {
             </Button>
           </Form>
         </ListGroupItem>
+        </Container>
       </div>
     );
   }

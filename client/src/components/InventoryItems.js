@@ -46,7 +46,7 @@ class InventoryItems extends Component {
         <ItemModal onAddItem={this.onAddItem} />
         <ListGroup>
           {items.map(({ _id, name, price }) => (
-            <ListGroupItem key={_id}>
+            <ListGroupItem key={_id} className="trans">
               <Button
                 className="btn-remove"
                 size="md"

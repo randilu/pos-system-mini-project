@@ -7,10 +7,12 @@
     "client-install": "npm install --prefix client",
     "start": "node app.js",
     "server": "nodemon app.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "debug": "nodemon --inspect app.js",
     "client": "npm start --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "test": "mocha test/**/*test.js --reporter spec --timeout 5000 --exit",
+    "watch": "mocha --watch *.js",
+    "coverage": "nyc --reporter=html --reporter=text mocha test/**/*test.js --exit"
   },
   "author": "Randilu Soysa",
   "license": "MIT",
@@ -27,6 +29,13 @@
     "require": "^2.4.20"
   },
   "devDependencies": {
-    "nodemon": "^1.18.10"
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.1",
+    "mocha": "^6.0.2",
+    "nodemon": "^1.18.10",
+    "nyc": "^13.3.0",
+    "really-need": "^1.9.2"
   }
 }

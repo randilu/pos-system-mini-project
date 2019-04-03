@@ -23,7 +23,7 @@ function getAllItems() {
  * Add a new item to the store
  *
  *
- * body Item Item object that needs to be added to the store
+ * body Item object that needs to be added to the store
  * no return value expected for this operation
  **/
 function createItem(name, price) {
