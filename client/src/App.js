@@ -29,8 +29,7 @@ class App extends Component {
   render() {
     if (this.state.isLoggedin) {
       return (
-        <div className="App">
-        <div className="parallax">
+        <div>
           <AppNavbar
             userName={this.state.userName}
             logoutLink="Logout"
@@ -40,18 +39,17 @@ class App extends Component {
             <InventoryItems />
             <Orders userId={this.state.userId} />
           </Container>
-          </div>
           <NotificationContainer />
         </div>
       );
     }
     return (
-      <div className="App">
-        <div className="bg">
-        <AppNavbar />
-        <Container >
-          <UserLogin  getStatus={this.getStatus} />
-        </Container>
+      <div>
+        <div>
+          <AppNavbar />
+          <Container>
+            <UserLogin getStatus={this.getStatus} />
+          </Container>
         </div>
         <NotificationContainer />
       </div>
